@@ -1,1 +1,8 @@
+%{
+File for initially pulling data from npy files
+}%
 
+clc
+clear
+
+data = readNPY(amplitudes.*);
