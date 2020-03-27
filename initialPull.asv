@@ -31,7 +31,7 @@ end
 
 %%Plotting
 figure(1)
-plot(time_split(88, :), chan_split(88, :), "o"); %plotting spikes for cluster 87 (88-1)
+plot(time_split(88, :), chan_split(88, :), "o"); 
 title('Spike amplitudes over time');
 xlabel('Time (s)');
 ylabel('Amplitude (mV?)');
