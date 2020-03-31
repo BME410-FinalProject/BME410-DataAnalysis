@@ -1,4 +1,4 @@
-fn = 'C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\rawDataSample.bin';
+fn = 'D:\Documents\Word\College\Junior Year\Semester 2\BME 410\rawDataSample.bin';
 fid = fopen(fn, 'r');
 dat = fread(fid, [385 Inf], '*int16');
 fclose(fid);
