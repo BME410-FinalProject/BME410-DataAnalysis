@@ -6,7 +6,7 @@ Noah Smith, Charlie Martin, Lindsay Karaba
 This program extracts the raw voltage data recorded from neuropixel
 probes and forms two plots. The first shows voltage (represented by color)
 across 72 channels over the timespan. The second extracts the voltage trace
-over time for selected channels of the probe. 
+over time for selected channels of the probe.
 %}
 %% Ensure numpy path is established
 %note that addpath path must be changed for specific computer
@@ -23,7 +23,7 @@ chanMap = readNPY('channel_map.npy');
 rawData = rawData(chanMap+1,:);
 
 %% Plot color map of data
-figure; 
+figure;
 imagesc(rawData(:,:));
 colorbar;
 title('Raw voltage data for 72 channels over time');
@@ -46,3 +46,14 @@ end
 xlabel('Time (ms)')
 ylabel('Voltage (mV)')
 hold off
+
+%% Now need to add in the Z-scored data
+z_scored_data = zscore(rawData);
+
+
+figure;
+imagesc(z_scored_data);
+colorbar;
+title('Z-Scored Voltage Data for 72 channels')
+xlabel('Time')
+ylabel('Channel Number')
