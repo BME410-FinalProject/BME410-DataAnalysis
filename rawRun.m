@@ -71,32 +71,61 @@ ylabel('Channel number');
 load('stimInfo.mat');
 stimulusTime = stimTimes{1,1};
 stimType = stimPositions{1,1};
-response = rawData(:, size(stimulusTime, 2));
-z_scored_short = rawData(:, size(stimulusTime,2));
 
-%% Tuning
 coor = unique(stimType, 'rows'); %Number of unique coordinates tested
 Ncoor = length(coor); %How many different stimuli?
-Nneurons = size(response,1); %How many neurons?
-row = size(coor, 1);
-col = size(coor, 2);
-temp = NaN(size(response,2));
+Nneurons = size(rawData,1); %How many neurons?
+row = max(coor(:, 1));
+col = max(coor(:, 2));
+
+timeLength = size(stimulusTime, 2);
+response = zeros(size(rawData,1), timeLength);
+response = rawData(:, 1:timeLength);
+z_scored_short = rawData(:, 1:timeLength);
+
+%% Tuning
+tuning = zeros(Nneurons, row, col);
+temp = zeros(size(response,2));
 m = 1;
-hold on
 figure;
-for i = 1:row
-    for j = 1:col
-        for k = 1:size(stimulusTime, 2)
-           subplot(row, col, m);
-           if (stimType(k, 1) == (i))&&(stimType(k, 2) == (j)) 
-               temp(k) = response(k);
-           end
-           tempPlot = mean(temp(:));
-           imagesc(stimulusTime, tempPlot);
-           colorbar;
+for i = 1:2 %change to Nneurons if you want all neurons
+    for k = 1:row
+        for m = 1:col
+            for j = 1:size(response, 2) %Check length of time for each neuron
+                if (stimType(j, 1) == (k))&&(stimType(j, 2) == (m))
+                    temp(j) = z_scored_short(i, j);
+                end
+            end
+            tuning(i, k, m) = mean(temp, 'all');
         end
     end
 end
+plottune1 = zeros(row, col);
+plottune1(1, :) = tuning(1, 1, :);
+plottune1(:, 1) = tuning(1, :, 1);
+plottune2 = zeros(row, col);
+plottune2(1, :) = tuning(2, 1, :);
+plottune2(:, 1) = tuning(2, :, 1);
+figure()
+subplot(1,2,1);
+imagesc(plottune1);
+colorbar;
+subplot(1,2,2);
+imagesc(plottune2);
+colorbar;
+% for i = 1:row
+%     for j = 1:col
+%         for k = 1:size(stimulusTime, 2)
+%            subplot(row, col, m);
+%            if (stimType(k, 1) == (i))&&(stimType(k, 2) == (j)) 
+%                temp(k) = response(k);
+%            end
+%            tempPlot = mean(temp(:));
+%            imagesc(rawData);
+%            colorbar;
+%         end
+%     end
+% end
            
                
 % tuningcurves = NaN(Ndir,Nneurons); 
