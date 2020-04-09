@@ -80,6 +80,7 @@ Ncoor = length(coor); %How many different stimuli?
 Nneurons = size(response,1); %How many neurons?
 row = size(coor, 1);
 col = size(coor, 2);
+temp = NaN(size(response,2));
 m = 1;
 hold on
 figure;
@@ -88,7 +89,15 @@ for i = 1:row
         for k = 1:size(stimulusTime, 2)
            subplot(row, col, m);
            if (stimType(k, 1) == (i))&&(stimType(k, 2) == (j)) 
-               mean(response(
+               temp(k) = response(k);
+           end
+           tempPlot = mean(temp(:));
+           imagesc(stimulusTime, tempPlot);
+           colorbar;
+        end
+    end
+end
+           
                
 % tuningcurves = NaN(Ndir,Nneurons); 
 % ztuning = NaN(Ndir,Nneurons); 
