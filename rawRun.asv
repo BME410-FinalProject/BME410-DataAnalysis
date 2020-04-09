@@ -87,7 +87,7 @@ for i = 1:row
     for j = 1:col
         for k = 1:size(stimulusTime, 2)
            subplot(row, col, m);
-           if (stimType(k, 1) == (i))&&(stimType(k, 2) == (j)) 
+           if (stimType(k, 1) == (i))&&(stimType(k, 2) == (j))
                mean(response(
                
 % tuningcurves = NaN(Ndir,Nneurons); 
