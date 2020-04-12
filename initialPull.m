@@ -66,12 +66,12 @@ row = max(coor(:, 1));
 col = max(coor(:, 2));
 tuning = NaN(numClust, row, col);
 
-nums = round(1 + (297-1) .* rand(5,1))
+nums = round(1 + (297-1) .* rand(5,1)) %generate random neurons in our range to investigate
 
 for i = 1:5 %change to Nneurons if you want all neurons
     temp = zeros(row, col); % reset temporary array
     for j = 1:size(time_split, 2) %iterate through length of time
-        if (z_scored_data(i, j) > 0)
+        if (z_scored_data(nums(i), j) > 0)
             k = stimType(j, 1);
             m = stimType(j, 2);
             temp(k, m) = temp(k, m) + 1;
@@ -79,7 +79,7 @@ for i = 1:5 %change to Nneurons if you want all neurons
     end 
     for k = 1:row
         for m = 1:col
-            tuning(i, k, m) = temp(k, m);
+            tuning(nums(i), k, m) = temp(k, m);
         end
     end
 end
@@ -89,8 +89,8 @@ hold on
 tempPlot = zeros(row, col);
 count = 1;
 for i = 1:5
-    tempPlot(1, :) = tuning(i, 1, :);
-    tempPlot(:, 1) = tuning(i, :, 1);
+    tempPlot(1, :) = tuning(nums(i), 1, :);
+    tempPlot(:, 1) = tuning(nums(i), :, 1);
     subplot(2, 3, count);
     imagesc(tempPlot);
     colorbar;
