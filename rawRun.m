@@ -10,11 +10,13 @@ over time for selected channels of the probe.
 %}
 %% Ensure numpy path is established
 %note that addpath path must be changed for specific computer
+%addpath'D:\Documents\Word\College\Junior Year\Semester 2\BME 410\rawDataSample.bin'; % Noah
 addpath('D:\Documents\Word\College\Junior Year\Semester 2\BME 410\npy-matlab-master')
 savepath
 
 %% Read in raw data file
 %note that fn path must be changed for specific computer
+%fn ='D:\Documents\Word\College\Junior Year\Semester 2\BME 410\rawDataSample.bin'; % Noah
 fn = 'D:\Documents\Word\College\Junior Year\Semester 2\BME 410\rawDataSample.bin';
 fid = fopen(fn, 'r');
 rawData = fread(fid, [385 Inf], '*int16');
@@ -22,6 +24,10 @@ fclose(fid);
 chanMap = readNPY('channel_map.npy');
 rawData = rawData(chanMap+1,:);
 
+spiketime = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_times.npy');
+chanMap = readNPY('channel_map.npy');
+spiketime = spiketime(chanMap+1,:);
+spiketime = double(spiketime) / 30.0; % convert to milliseconds
 %% Plot color map of data
 figure;
 imagesc(rawData(:,:));
@@ -66,6 +72,25 @@ colorbar;
 title('Raw voltage data for 72 channels over time');
 xlabel('Time (ms)');
 ylabel('Channel number');
+%% Set spike times per neuron
+spikes = [];
+
+for i=1:2
+  k = 1;
+  l = 1;
+    for j = 1: length(spiketime)
+        if z_scored_data(i, j) > 3
+            l = l+1;
+          if double(j) == spiketime(j,1)
+          spikes(i,k) = spiketimes(j, 1);
+          k = k + 1;
+          end
+        end
+      %  if rawData(i,j) == spiketime(j, 1)
+
+    %    end
+    end
+end
 
 %% Import stimulus information
 load('stimInfo.mat');
@@ -74,14 +99,14 @@ stimType = stimPositions{1,1};
 
 coor = unique(stimType, 'rows'); %Number of unique coordinates tested
 Ncoor = length(coor); %How many different stimuli?
-Nneurons = size(rawData,1); %How many neurons?
+Nneurons = size(spiketime,1); %How many neurons?
 row = max(coor(:, 1));
 col = max(coor(:, 2));
 
 timeLength = size(stimulusTime, 2);
-response = zeros(size(rawData,1), timeLength);
-response = rawData(:, 1:timeLength);
-z_scored_short = rawData(:, 1:timeLength);
+response = zeros(size(spiketime,1), timeLength);
+response = spiketime(:, 1:timeLength);
+%z_scored_short = rawData(:, 1:timeLength);
 
 %% Tuning
 tuning = NaN(Nneurons, row, col);
@@ -101,6 +126,7 @@ for i = 1:2 %change to Nneurons if you want all neurons
         end
     end
 end
+
 plottune1 = zeros(row, col);
 plottune1(1, :) = tuning(1, 1, :);
 plottune1(:, 1) = tuning(1, :, 1);
@@ -118,7 +144,7 @@ colorbar;
 %     for j = 1:col
 %         for k = 1:size(stimulusTime, 2)
 %            subplot(row, col, m);
-%            if (stimType(k, 1) == (i))&&(stimType(k, 2) == (j)) 
+%            if (stimType(k, 1) == (i))&&(stimType(k, 2) == (j))
 %                temp(k) = response(k);
 %            end
 %            tempPlot = mean(temp(:));
@@ -127,27 +153,26 @@ colorbar;
 %         end
 %     end
 % end
-           
-               
-% tuningcurves = NaN(Ndir,Nneurons); 
-% ztuning = NaN(Ndir,Nneurons); 
-% for k = 1:Ndir % go throuh each direction    
-%     tuningcurves(k,:) = mean(response(stimType == dir(k, :),:)); % calculate mean response of each neuron to single stim direction    
-%     ztuning(k,:) = mean(z_scored_short(stimType == dir(k, :),:)); % "" for z-scored data 
+
+
+% tuningcurves = NaN(Ndir,Nneurons);
+% ztuning = NaN(Ndir,Nneurons);
+% for k = 1:Ndir % go throuh each direction
+%     tuningcurves(k,:) = mean(response(stimType == dir(k, :),:)); % calculate mean response of each neuron to single stim direction
+%     ztuning(k,:) = mean(z_scored_short(stimType == dir(k, :),:)); % "" for z-scored data
 % end
-% figure(3) 
-% set(gcf,'Position',[100 500 1000 500]) 
-% subplot(2,1,1) 
-% imagesc(tuningcurves) 
-% xlabel('Neuron #') 
-% ylabel('Mean resp.') 
-% title('Tuning Curves') 
+% figure(3)
+% set(gcf,'Position',[100 500 1000 500])
+% subplot(2,1,1)
+% imagesc(tuningcurves)
+% xlabel('Neuron #')
+% ylabel('Mean resp.')
+% title('Tuning Curves')
 % subplot(2,1,2)
-% imagesc(ztuning) 
-% xlabel('Neuron #') 
-% ylabel('Mean resp.') 
+% imagesc(ztuning)
+% xlabel('Neuron #')
+% ylabel('Mean resp.')
 % title('Tuning Curves of Z-scored data')
 % % claim neurons are tuned if at any orientation have z-score > 0.5
-% [maxztc,PD] = max(ztuning); 
+% [maxztc,PD] = max(ztuning);
 % tuned = find(maxztc >= 0.5);
-
