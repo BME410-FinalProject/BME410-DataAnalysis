@@ -11,8 +11,7 @@ explorer, and then copy the directive from the top bar. You have to add in
 the file name manually with this method
 %}
 amp = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\amplitudes.npy'); %Spike amplitude
-raw_time = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_times.npy'); %Spike times (NOT SORTED LINEARLY)
-%spiketemp = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_templates.npy');
+raw_time = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_times.npy'); %Spike times (by sample
 chanMap = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\channel_map.npy');%sorts channel with cluster
 cluster = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_clusters.npy');%spikes per cluster?
 chanPos = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\channel_positions.npy');
@@ -66,18 +65,14 @@ row = max(coor(:, 1));
 col = max(coor(:, 2));
 tuning = NaN(numClust, row, col);
 
-nums = round(1 + (297-1) .* rand(5,1)) %generate random neurons in our range to investigate
-test = zeros([size(time_split, 2) 2]);
-l = 1;
+nums = round(1 + (297-1) .* rand(5,1)); %generate random neurons in our range to investigate
+
 for i = 1:5 %change to Nneurons if you want all neurons
     temp = zeros(row, col); % reset temporary array
     for j = 1:size(time_split, 2) %iterate through length of time
-        if (z_scored_data(nums(i), j) > 0)
-            k = stimType(j, 1);
+        if (z_scored_data(nums(i), j) > 0) %check whether or not there is a spike at this time
+            k = stimType(j, 1); %check which stimulus position triggered the spike
             m = stimType(j, 2);
-            test(l, 1) = k;
-            test(l, 2) = m;
-            l = l+1;
             temp(k, m) = temp(k, m) + 1;
         end
     end 
@@ -96,37 +91,13 @@ for i = 1:5
     for k = 1:row
         for m = 1:col
             tempPlot(k, m) = tuning(nums(i), k, m);
-    tempPlot(1, :) = tuning(nums(i), 1, :);
-    tempPlot(:, 1) = tuning(nums(i), :, 1);
+        end
+    end
     subplot(2, 3, count);
     imagesc(tempPlot);
     colorbar;
+    neuron = nums(i);
+    title(['Plot of stimulus response for neuron ' int2str(neuron)]);
     count = count + 1;
 end
 hold off
-% plottune1 = zeros(row, col);
-% plottune1(1, :) = tuning(5, 1, :);
-% plottune1(:, 1) = tuning(5, :, 1);
-% plottune2 = zeros(row, col);
-% plottune2(1, :) = tuning(3, 1, :);
-% plottune2(:, 1) = tuning(3, :, 1);
-% subplot(1,2,1);
-% imagesc(plottune1);
-% colorbar;
-% subplot(1,2,2);
-% imagesc(plottune2);
-% colorbar;
-% 
-%spike_time/samplingRate
-% for i = 1:2 %change to Nneurons if you want all neurons
-%     for k = 1:row
-%         for m = 1:col
-%             for j = 1:size(time_ms, 2) %Check length of time for each neuron
-%                 if (stimType(j, 1) == (k))&&(stimType(j, 2) == (m))
-%                     temp = temp+1;
-%                 end
-%             end
-%             tuning(i, k, m) = mean(temp);
-%         end
-%     end
-% end
