@@ -54,6 +54,9 @@ end
 
 figure(), imagesc(resp)
 title('Response Plot')
+xlabel('Neuron #')
+ylabel('Time of Response')
+colorbar
 
 
 [coeff,score,latent] = pca(resp);
@@ -63,9 +66,9 @@ hold on
 for k = 1:ncellsub
     scatter(score(1:ncellsub,1),score(1:ncellsub,2),'.');
 end
+title(sprintf('Percent of Variance Captured by PC1 and PC2 = %0.2f',sum(latent(1:2))/sum(latent)*100))
 xlabel('PC 1')
 ylabel('PC 2')
-zlabel('PC 3')
 hold off
 
 figure(3)
@@ -73,7 +76,7 @@ hold on
 for k = 1:ncellsub
     scatter3(score(1:ncellsub,1),score(1:ncellsub,2),score(1:ncellsub,3),'.');
 end
-
+title(sprintf('Percent of Variance Captured by PC1, PC2, and PC 3 = %0.2f',sum(latent(1:3))/sum(latent)*100))
 xlabel('PC 1')
 ylabel('PC 2')
 zlabel('PC 3')
