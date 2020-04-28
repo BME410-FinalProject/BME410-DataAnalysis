@@ -53,7 +53,7 @@ for k = 1:ncellsub
     end
 end
 
-figure(), imagesc(resp)
+figure, imagesc(resp)
 title('Response Plot')
 
 %%Z-Scored Data
@@ -61,7 +61,7 @@ title('Response Plot')
 z_resp = zscore(resp);
 
 % Plot transposed matrix (makes it easier to see) and compare
-figure(2)
+figure
 set(gcf,'Position',[100 500 1000 800])
 imagesc(z_resp')
 colorbar
@@ -79,7 +79,7 @@ ylabel('Neuron #')
 
 [coeff,score,latent] = pca(resp);
 
-figure(2)
+figure
 hold on
 for k = 1:ncellsub
     scatter(score(1:ncellsub,1),score(1:ncellsub,2),'.');
@@ -89,7 +89,18 @@ ylabel('PC 2')
 zlabel('PC 3')
 hold off
 
-figure(3)
+% Scrap Code for testing purposes
+% figure
+% hold on
+% % for k = 1:ncellsub
+% scatter3(score(:,1),score(:,2),score(:,3),'.');
+% % end
+% xlabel('PC 1')
+% ylabel('PC 2')
+% zlabel('PC 3')
+% hold off
+
+figure
 hold on
 for k = 1:ncellsub
     scatter3(score(1:ncellsub,1),score(1:ncellsub,2),score(1:ncellsub,3),'.');
@@ -108,7 +119,7 @@ subN = round(length(clustids)/10); %%This is a guess
 % y_hat_i = bhat0 + bhat1*x1_i + bhat2*x2_i + ..... + bhatn*xn_i
 statshat = [ones(size(score,1),1),score(:,1:subN)]*b; % y_hat = X*bhat;
 
-figure(4),
+figure
 plot(StimTimes',statshat,'k.')
 hold on
 plot(StimTimes',StimTimes','r-')
@@ -121,7 +132,7 @@ title(['R^2 =',num2str(stats(1)),' using ', num2str(subN), ' PCs']); % stats ret
 %% Now, just use first 3 PCs
 [b3,bint3,r3,rint3,stats3] = regress(StimTimes', [ones(size(score,1),1),score(:,1:3)]);
 statshat3 = [ones(size(score,1),1),score(:,1:3)]*b3; % y_hat = Xb;
-figure(5),
+figure
 plot(StimTimes',statshat3,'k.')
 hold on
 plot(StimTimes',StimTimes','r-')
@@ -143,7 +154,7 @@ for k = 1:MaxN
     [b,bint,r,rint,stats] = regress(StimTimes', [ones(size(score,1),1),score(:,1:k)]);
     statschange(k) = stats(1);
 end
-figure(6),
+figure
 plot(1:MaxN,statschange(1:50))
 xlabel('# PCs used in Regression')
 ylabel('R^2 value of fit')
@@ -176,7 +187,7 @@ ytesthat = Xtest*btr;
 Rss_decode(k) = sum((ytest - ytesthat).^2); % compute residual sum squares
 end
 
-figure(8),
+figure
 plot(fract_vect,Rss_decode,'.-')
 xlabel('Fraction of data used for training')
 ylabel('Residual sum of squares')
@@ -227,7 +238,7 @@ for k = 1:MaxN
     statsz(k) = statszz(1);
 end
 
-figure(9),
+figure
 plot(1:MaxN,statschange(1:MaxN))
 hold on
 plot(1:MaxN,statschangeNEU)

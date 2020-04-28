@@ -10,11 +10,19 @@ the very least. It's easiest if you navigate to the file using your file
 explorer, and then copy the directive from the top bar. You have to add in
 the file name manually with this method
 %}
-amp = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\amplitudes.npy'); %Spike amplitude
-raw_time = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_times.npy'); %Spike times (by sample)
-chanMap = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\channel_map.npy');%sorts channel with cluster
-cluster = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_clusters.npy');%spikes per cluster?
-chanPos = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\channel_positions.npy');
+%Lindsay
+% amp = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\amplitudes.npy'); %Spike amplitude
+% raw_time = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_times.npy'); %Spike times (by sample)
+% chanMap = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\channel_map.npy');%sorts channel with cluster
+% cluster = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\spike_clusters.npy');%spikes per cluster?
+% chanPos = readNPY('C:\Users\karab\Documents\GitHub\BME410-DataAnalysis\channel_positions.npy');
+
+%Charlie
+amp = readNPY('C:\Users\charl\Desktop\Institue of Accessible Science\Wrist Orthotics\BME410-DataAnalysis\amplitudes.npy'); %Spike amplitude
+raw_time = readNPY('C:\Users\charl\Desktop\Institue of Accessible Science\Wrist Orthotics\BME410-DataAnalysis\spike_times.npy'); %Spike times (by sample)
+chanMap = readNPY('C:\Users\charl\Desktop\Institue of Accessible Science\Wrist Orthotics\BME410-DataAnalysis\channel_map.npy');%sorts channel with cluster
+cluster = readNPY('C:\Users\charl\Desktop\Institue of Accessible Science\Wrist Orthotics\BME410-DataAnalysis\spike_clusters.npy');%spikes per cluster?
+chanPos = readNPY('C:\Users\charl\Desktop\Institue of Accessible Science\Wrist Orthotics\BME410-DataAnalysis\channel_positions.npy');
 
 %% Stimulus
 load('stimInfo.mat');
@@ -58,9 +66,9 @@ title('Raw spike time data for 297 spike clusters');
 xlabel('Time (ms)');
 ylabel('Cluster number');
 
-%% "Tuning Curve"
+%% "Tuning Curve" Code
 coor = unique(stimType, 'rows'); %Number of unique coordinates tested
-Ncoor = length(coor); %How many different stimuli?
+Ncoor = length(coor); % Number of uniuqe stimuli
 row = max(coor(:, 1));
 col = max(coor(:, 2));
 tuning = NaN(numClust, row, col);
@@ -83,6 +91,7 @@ for i = 1:5 %change to Nneurons if you want all neurons
     end
 end
 
+% Plot Stimulus Figures (currently for 5 random neurons
 figure; 
 hold on
 tempPlot = zeros(row, col);
@@ -97,7 +106,7 @@ for i = 1:5
     imagesc(tempPlot);
     colorbar;
     neuron = nums(i);
-    title(['Plot of stimulus response for neuron ' int2str(neuron)]);
+    title(['Stimulus Response for Neuron ' int2str(neuron)]);
     count = count + 1;
 end
 hold off
